@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Hateoas\Configuration\Annotation as Hateoas;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
@@ -16,6 +17,7 @@ class Author
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Serializer\Groups({"GET_SHOW"})  
      * 
      */
     private $id;
@@ -34,12 +36,18 @@ class Author
 
     /**
      * @ORM\OneToMany(targetEntity="Article", mappedBy="author", cascade={"persist"}) 
+     * @*Serializer\Groups({"GET_SHOW"})  
      */
     private $articles;
 
     public function __construct()
     {
         $this->articles = new ArrayCollection();
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
 
     public function getFullname()

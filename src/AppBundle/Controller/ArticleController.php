@@ -14,6 +14,7 @@ use FOS\RestBundle\Request\ParamFetcherInterface;
 use AppBundle\Representation\Articles;
 use Symfony\Component\Validator\ConstraintViolationList;
 use AppBundle\Exception\ResourceValidationException;
+use Hateoas\HateoasBuilder;
 
 class ArticleController extends FOSRestController
 {
@@ -32,6 +33,25 @@ class ArticleController extends FOSRestController
     public function showAction(Article $article)
     {
         return $article;
+        
+    }
+
+     /**
+     * @Rest\Put(
+     *     path = "/articles/{id}",
+     *     name = "app_article_update",
+     *     requirements = {"id"="\d+"}
+     * )
+     * @View(
+     *     statusCode = 200,
+     *     serializerGroups = {"GET_SHOW"}
+     * )
+
+     */
+    public function updateAction(Article $article)
+    {
+        return $article;
+        
     }
     
     /**
