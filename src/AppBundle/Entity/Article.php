@@ -7,13 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 /**
  * @ORM\Entity
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ArticleRepository")
- * 
- * @**Serializer\ExclusionPolicy("ALL")
+ * @Serializer\ExclusionPolicy("ALL")
  * 
  * @Hateoas\Relation(
  *      "self",
@@ -22,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          parameters = { "id" = "expr(object.getId())" },
  *          absolute = true
  *      ),
- *     exclusion = @Hateoas\Exclusion(groups = "GET_SHOW")     
+ *      exclusion = @Hateoas\Exclusion(groups = {"GET_SHOW","GET_LIST"})   
  * ) 
  * 
  * @Hateoas\Relation(
@@ -32,7 +30,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          parameters = { "id" = "expr(object.getId())" },
  *          absolute = true
  *      ),
- *     exclusion = @Hateoas\Exclusion(groups = "GET_SHOW")   
+ *      exclusion = @Hateoas\Exclusion(groups = {"GET_SHOW","GET_LIST"}) 
  * )
  * 
  * @Hateoas\Relation(
@@ -42,20 +40,20 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          parameters = { "id" = "expr(object.getId())" },
  *          absolute = true
  *      ),
- *     exclusion = @Hateoas\Exclusion(groups = "GET_SHOW")   
+ *      exclusion = @Hateoas\Exclusion(groups = {"GET_SHOW","GET_LIST"}) 
  * )
  * 
  * @Hateoas\Relation( 
  *   "author", 
- *   embedded = @Hateoas\Embedded("expr(object.getAuthor())"), 
- *   exclusion = @Hateoas\Exclusion(groups = "GET_SHOW")
+ *   embedded = @Hateoas\Embedded("expr(object.getAuthor())"),
+ *   exclusion = @Hateoas\Exclusion(groups = {"GET_SHOW"}) 
  * ) 
+ * 
  * 
  * @Hateoas\Relation(
  *     "weather",
- *     embedded = @Hateoas\Embedded("expr(service('app.weather').getCurrent())") 
- * )
- *  
+ *     embedded = @Hateoas\Embedded("expr(service('app.weather').getCurrent())")
+ * )  
  */
 class Article
 {
@@ -63,45 +61,45 @@ class Article
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO") 
-     * @**Serializer\Expose
      * @Serializer\Since("1.0")
-     * @Serializer\Groups({"GET_SHOW","GET_LIST"})    
+     * @Serializer\Groups({"GET_LIST"})  
+     * @Serializer\Expose
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Serializer\Groups({"GET_SHOW"}) 
-     * @Serializer\Since("1.0")
-     * @**Serializer\Expose
+     * @*Serializer\Since("1.0")
      * @Assert\NotBlank(groups={"Create"})
+     * @Serializer\Groups({"GET_SHOW","GET_LIST"}) 
+     * @Serializer\Expose 
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
-     * @Serializer\Groups({"GET_SHOW"})   
-     * @**Serializer\Expose
      * @Serializer\Since("1.0")
      * @Assert\NotBlank(groups={"Create"})
+     * @Serializer\Groups({"GET_SHOW","GET_LIST"})  
+     * @Serializer\Expose
      */
     private $content;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Author", cascade={"all"}, fetch="EAGER")
-     * @Serializer\Since("1.0")
-     * @*Serializer\Groups({"GET_SHOW","GET_LIST"})  
-     * @**Serializer\Expose
-     */
-    private $author;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
-     * @Serializer\Groups({"GET_SHOW","GET_LIST"}) 
      * @Serializer\Since("2.0") 
-     * @**Serializer\Expose
+     * @Serializer\Groups({"GET_SHOW","GET_LIST"})
+     * @Serializer\Expose  
      */
     private $shortDescription;  
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Author", cascade={"all"}, fetch="EAGER")
+     * @Serializer\Since("1.0")
+     * @Serializer\Groups({"GET_LIST"})
+     * @Serializer\Expose      
+     */
+    private $author;
     
     public function getId()
     {
@@ -141,7 +139,6 @@ class Article
     {
         $this->author = $author;
     }
-
 
     public function getShortDescription()
     {

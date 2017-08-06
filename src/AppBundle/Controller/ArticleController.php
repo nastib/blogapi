@@ -26,12 +26,13 @@ class ArticleController extends FOSRestController
      * )
      * @View(
      *     statusCode = 200,
-     *     serializerGroups = {"GET_SHOW"}
+      *    serializerGroups = {"GET_SHOW"}
      * )
-
+     * 
      */
     public function showAction(Article $article)
     {
+        //dump($this->get('app.weather')); die; 
         return $article;
         
     }
@@ -43,10 +44,8 @@ class ArticleController extends FOSRestController
      *     requirements = {"id"="\d+"}
      * )
      * @View(
-     *     statusCode = 200,
-     *     serializerGroups = {"GET_SHOW"}
+     *     statusCode = 200
      * )
-
      */
     public function updateAction(Article $article)
     {
@@ -115,18 +114,25 @@ class ArticleController extends FOSRestController
      *     description="The pagination offset"
      * )
      * @Rest\View(
-     *     statusCode = 200
+     *    statusCode = 200,
+     *    serializerGroups = {"GET_LIST"}
+     * 
      * )
      */
 
     public function listAction(ParamFetcherInterface $paramFetcher)
     {
-        $pager = $this->getDoctrine()->getRepository('AppBundle:Article')->search(
-            $paramFetcher->get('keyword'),
-            $paramFetcher->get('order'),
-            $paramFetcher->get('limit'),
-            $paramFetcher->get('offset')
-        );
-        return new Articles($pager);
+        //myFindAll($limit,$offset)
+        return $this->getDoctrine()->getRepository('AppBundle:Article')->myFind(5,4);
+        
+          //Liste avec pagination PagerfantaBundle
+//        $pager = $this->getDoctrine()->getRepository('AppBundle:Article')->search(
+//            $paramFetcher->get('keyword'),
+//            $paramFetcher->get('order'),
+//            $paramFetcher->get('limit'),
+//            $paramFetcher->get('offset')
+//        );
+//        return new Articles($pager);
+        
     }
 }

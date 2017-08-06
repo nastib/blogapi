@@ -22,5 +22,17 @@ class ArticleRepository extends AbstractRepository
         
         return  $this->paginate($qb, $limit, $offset); 
     }
+    
+    
+    public function myFind($limit = 5, $offset=0)
+    {
+       $qb = $this
+            ->createQueryBuilder( 'a' )
+            ->orderBy( 'a.id', 'ASC' )
+            ->setMaxResults( $limit )
+            ->setFirstResult( $offset )
+        ;
+        return  $qb->getQuery()->getResult(); 
+    }
 
 }

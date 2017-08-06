@@ -10,7 +10,7 @@ class Weather
     private $weatherClient;
     private $serializer;
     private $apiKey;
-
+    
     public function __construct(Client $weatherClient, Serializer $serializer, $apiKey)
     {
         $this->weatherClient = $weatherClient;
@@ -21,7 +21,12 @@ class Weather
     public function getCurrent()
     {
         $uri = '/data/2.5/weather?q=Paris&APPID='.$this->apiKey;
-        $response = $this->weatherClient->get($uri);
+        try {
+            $response = $this->weatherClient->get($uri);
+        } catch (\Exception $e) {
+            // Penser à logger l'erreur.
+            return ['error' => 'Les informations ne sont pas disponibles pour le moment.'.$e->getMessage()];
+        }
 
         $data = $this->serializer->deserialize($response->getBody()->getContents(), 'array', 'json');
 

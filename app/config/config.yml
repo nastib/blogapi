@@ -6,7 +6,7 @@ imports:
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    locale: en
+    locale: fr
 
 framework:
     #esi: ~
@@ -93,7 +93,7 @@ fos_rest:
         enabled: true
         debug: true   # si false le message sera toujours la transcription du code statut 400 Bad Request        
         codes:
-           { AppBundle\Exception\ResourceValidationException: 400 }
+           { AppBundle\Exception\ResourceValidationException: 400, \Exception: 500 }
         messages:
            { AppBundle\Exception\ResourceValidationException: true }
     versioning:
@@ -108,8 +108,13 @@ sensio_framework_extra:
     view: { annotations: true }
     request: { converters: true }
 
+#Service name csa_guzzle.client.weather
 csa_guzzle:
     clients:
         weather:
             config:
                 base_uri: http://api.openweathermap.org
+                #timeout: 2.0
+                #headers:
+                    #Accept: application/json
+                    
